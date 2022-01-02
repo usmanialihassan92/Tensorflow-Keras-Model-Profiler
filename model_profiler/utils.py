@@ -184,31 +184,31 @@ def count_flops(model, log = False):
     # run through models
     if isinstance(model, list):
         for layer in model:
-            if "dense" in layer.get_config()["name"] or "fc" in layer.get_config()["name"] or "squeeze" in layer.get_config()["name"]:
+            if "dense" in str(layer) or "fc" in str(layer) or "squeeze" in str(layer):
                 layer_flops.append(count_linear(layer))
-            elif "conv" in layer.get_config()["name"] :
+            elif "conv" in str(layer) :
                 layer_flops.append(count_conv2d(layer,log))
-            elif "dwconv" in layer.get_config()["name"]:
+            elif "dwconv" in str(layer):
                 layer_flops.append(count_conv2d(layer,log))
-            elif "expand" in layer.get_config()["name"]:
+            elif "expand" in str(layer):
                 layer_flops.append(count_conv2d(layer,log))
-            elif "res" in layer.get_config()["name"]:
+            elif "res" in str(layer):
                 layer_flops.append(count_conv2d(layer,log))
-            elif "stage" in layer.get_config()['name']:
+            elif "stage" in str(layer):
                 layer_flops.append(count_conv2d(layer,log))
     else:    
         for layer in model.layers:
-            if "dense" in layer.get_config()["name"] or "fc" in layer.get_config()["name"] or "squeeze" in layer.get_config()["name"]:
+            if "dense" in str(layer) or "fc" in str(layer) or "squeeze" in str(layer):
                 layer_flops.append(count_linear(layer))
-            elif "conv" in layer.get_config()["name"]:
+            elif "conv" in str(layer):
                 layer_flops.append(count_conv2d(layer,log))
-            elif "dwconv" in layer.get_config()["name"]:
+            elif "dwconv" in str(layer):
                 layer_flops.append(count_conv2d(layer,log))
-            elif "expand" in layer.get_config()["name"]:
+            elif "expand" in str(layer):
                 layer_flops.append(count_conv2d(layer,log))
-            elif "res" in layer.get_config()["name"]:
+            elif "res" in str(layer):
                 layer_flops.append(count_conv2d(layer,log))
-            elif "stage" in layer.get_config()['name']:
+            elif "stage" in str(layer):
                 layer_flops.append(count_conv2d(layer,log))
     
     return np.sum(layer_flops, dtype=np.int64, initial=0)
