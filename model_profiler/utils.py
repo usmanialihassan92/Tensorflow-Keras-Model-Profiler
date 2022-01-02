@@ -12,8 +12,8 @@ For appropriate units
 
 multiplier = {
     'KB': 1 / 1024,     # memory unit mega-byte
-    'MB': 1 / 2048,     # memory unit mega-byte
-    'GB': 1 / 4096,     # memory unit gega-byte
+    'MB': 1 / 1048576,     # memory unit mega-byte
+    'GB': 1 / 1073741824,     # memory unit gega-byte
     'KFLOPs': 1 / 1000,   # FLOPs unit kilo-flops
     'MFLOPs': 1 / 1000000,   # FLOPs unit mega-flops
     'GFLOPs': 1 / 1000000000,  # FLOPs unit giga-flops
