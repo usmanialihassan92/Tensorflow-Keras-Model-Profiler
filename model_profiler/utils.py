@@ -12,16 +12,17 @@ For appropriate units
 
 multiplier = {
     'KB': 1 / 1024,     # memory unit kilo-byte
-    'MB': 1 / 1048576,     # memory unit mega-byte
-    'GB': 1 / 1073741824,     # memory unit giga-byte
-    'KFLOPs': 1 / 1000,   # FLOPs unit kilo-flops
-    'MFLOPs': 1 / 1000000,   # FLOPs unit mega-flops
-    'GFLOPs': 1 / 1000000000,  # FLOPs unit giga-flops
-    'TFLOPs': 1 / 1000000000000,  # FLOPs unit tera-flops
-    'PFLOPs': 1 / 1000000000000000,  # FLOPs unit peta-flops
-    'EFLOPs': 1 / 1000000000000000000,  # FLOPs unit exa-flops
-    'Million': 1 / 1000000,  # paprmeter count unit millions
-    'Billion': 1 / 1000000000,  # paprmeter count unit billions
+    'MB': 1 / 1024**2,     # memory unit mega-byte
+    'GB': 1 / 1024**3,     # memory unit giga-byte    
+    'TB': 1 / 1024**4,     # memory unit tera-byte
+    'KFLOPs': 1 / 10**3,   # FLOPs unit kilo-flops
+    'MFLOPs': 1 / 10**6,   # FLOPs unit mega-flops
+    'GFLOPs': 1 / 10**9,  # FLOPs unit giga-flops
+    'TFLOPs': 1 / 10**12,  # FLOPs unit tera-flops
+    'PFLOPs': 1 / 10**15,  # FLOPs unit peta-flops
+    'EFLOPs': 1 / 10**18,  # FLOPs unit exa-flops
+    'Million': 1 / 10**6,  # paprmeter count unit millions
+    'Billion': 1 / 10**9,  # paprmeter count unit billions
 }
 # will make the ouput in appropriate unit
 def multiply(fn):
