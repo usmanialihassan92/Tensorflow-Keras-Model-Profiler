@@ -81,6 +81,6 @@ def model_profiler(model, Batch_size, profile=Profile, use_units=units, verbose=
     if verbose > 0:
         print(profile)
     
-    return profile
+    return profile, values
 
 
