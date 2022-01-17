@@ -6,7 +6,7 @@ Created on Tue Apr  6 17:45:33 2021
 """
 
 #from model_profiler.utils import get_available_gpus, get_param, keras_model_memory_usage, count_flops, mem_for_storing_weights
-from utils import get_available_gpus, get_param, keras_model_memory_usage, count_flops, mem_for_storing_weights
+from model_profiler.utils import get_available_gpus, get_param, keras_model_memory_usage, count_flops, mem_for_storing_weights
 from tensorflow.python.keras.engine.functional import Functional
 import numpy as np
 from tabulate import tabulate
@@ -18,6 +18,10 @@ units = ['GPU IDs', 'BFLOPs', 'GB', 'Million', 'MB']
 Profile = ['Selected GPUs', 'No. of FLOPs', 'GPU Memory Requirement',
            'Model Parameters', 'Memory Required by Model Weights']
 
+flops = 0
+mem = 0
+param = 0
+mem_req = 0
 
 def model_profiler(model, Batch_size, profile=Profile, use_units=units, verbose=0):
     '''
@@ -41,29 +45,16 @@ def model_profiler(model, Batch_size, profile=Profile, use_units=units, verbose=
     # tensorflow/keras engine functional, meaning one functional layer will be packing
     # all the layers. So, we first need to look inside the functional layer
     ###
-    
-    func_idx = 0
-    found_func = False
-    for j, layer in enumerate(model.layers):
-        if isinstance(layer, Functional):
-            func_idx = j
-            found_func = True
-    
-    if found_func:
-        flops = count_flops(use_units[1], model.layers[func_idx], Batch_size)
-        mem = keras_model_memory_usage(use_units[2], model.layers[func_idx], Batch_size)
-        param = get_param(use_units[3], model.layers[func_idx])
-        mem_req = mem_for_storing_weights(use_units[4], model.layers[func_idx])
+    global flops
+    global mem
+    global param
+    global mem_req
+    flops = 0
+    mem = 0
+    param = 0
+    mem_req = 0
 
-        flops += count_flops(use_units[1], model.layers[func_idx+1:], Batch_size)
-        mem += keras_model_memory_usage(use_units[2], model.layers[func_idx+1:], Batch_size)
-        param += get_param(use_units[3], model.layers[func_idx+1:])
-        mem_req += mem_for_storing_weights(use_units[4], model.layers[func_idx+1:])
-    else:
-        flops = count_flops(use_units[1], model, Batch_size)
-        mem = keras_model_memory_usage(use_units[2], model, Batch_size)
-        param = get_param(use_units[3], model)
-        mem_req = mem_for_storing_weights(use_units[4], model)
+    recursive_model_calculate_flops(model,use_units)
     
     values = [gpus, flops, mem, param, mem_req]
     
@@ -83,4 +74,20 @@ def model_profiler(model, Batch_size, profile=Profile, use_units=units, verbose=
     
     return profile, values
 
-
+def recursive_model_calculate_flops(model,use_units):
+    base_model = []
+    for j, layer in enumerate(model.layers):
+        if "functional" in str(layer) or "sequential" in str(layer):
+            sub_model = model.layers[j]
+            recursive_model_calculate_flops(sub_model,use_units)
+        else:
+            base_model.append(layer)
+    global flops
+    flops = flops + count_flops(use_units[1], base_model, Batch_size)
+    global mem
+    mem += keras_model_memory_usage(use_units[2], base_model, Batch_size)
+    global param
+    param += get_param(use_units[3], base_model)
+    global mem_req
+    mem_req += mem_for_storing_weights(use_units[4], base_model)
+    return
